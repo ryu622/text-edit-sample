@@ -34,7 +34,24 @@ export const postRouter = createTRPCRouter({
   deleteBlog:publicProcedure.input(z.object({id: z.number()})).mutation((req)=>{
     return db.post.delete({where:{id:req.input.id}});
   }),
-  
+
+  editBlog: publicProcedure
+  .input(z.object({
+    id: z.number(),
+    title: z.string().min(1),
+    description: z.string().nullable(),
+  }))
+  .mutation((req) => {
+    return db.post.update({
+      where: { id: req.input.id },
+      data: {
+        title: req.input.title,
+        description: req.input.description,
+      },
+    });
+  }),
+
+
   
 
 });
