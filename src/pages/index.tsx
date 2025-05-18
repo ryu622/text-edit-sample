@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
-
 import { api } from "~/utils/api";
+import JSZip from "jszip";
 
 export default function Home() {
   //const hello = api.post.hello.useQuery({ text: "from tRPC" });
@@ -9,6 +9,29 @@ export default function Home() {
 
   const allBlogs = api.post.getAllBlogs.useQuery();
   console.log(allBlogs.data);
+
+  const postBlog = api.post.postBlogs.useMutation({
+  onSettled: () => {
+    allBlogs.refetch(); // これで一覧の再取得（リロード）をする
+  },});
+  const handleZipUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const zip = await JSZip.loadAsync(file);
+      for (const fileName of Object.keys(zip.files)) {
+        const zipEntry = zip.files[fileName]!;
+        if (!zipEntry.name.endsWith(".txt")) continue;
+
+        const content = await zipEntry.async("string");
+      await postBlog.mutateAsync({
+        title: zipEntry.name.replace(".txt", ""),
+        description: content,
+      });
+    }
+
+    alert("インポート完了");
+  };
 
 
 
@@ -41,6 +64,13 @@ export default function Home() {
           <div className="mt-12 text-center">
             <Link href="/postBlog" className="rounded-md bg-orange-500 px-6 py-2 font-midium" >投稿する</Link>
           </div>
+          <h1>インポートテスト</h1>
+          <input
+            type="file"
+            accept=".zip"
+            onChange={handleZipUpload}
+            className="mt-4"
+          />
         </div>
       </main>
     </>
