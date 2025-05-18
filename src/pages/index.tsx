@@ -64,13 +64,20 @@ export default function Home() {
           <div className="mt-12 text-center">
             <Link href="/postBlog" className="rounded-md bg-orange-500 px-6 py-2 font-midium" >投稿する</Link>
           </div>
-          <h1>インポートテスト</h1>
+          <label
+            htmlFor="zipUpload"
+            className="inline-block cursor-pointer rounded bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700 transition"
+          >
+          ZIPファイルを選択してインポート
+          </label>
           <input
             type="file"
             accept=".zip"
+            id="zipUpload"
             onChange={handleZipUpload}
-            className="mt-4"
+            className="hidden"
           />
+
         </div>
       </main>
     </>
