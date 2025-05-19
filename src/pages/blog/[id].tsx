@@ -56,7 +56,7 @@ const DtailPage = () => {
     
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#3a3a3a] to-[#000000]">
       <div className="mx-auto mt-10 w-full max-w-2xl rounded-md bg-white p-6 shadow-md">
         <h1 className="mb-4 text-3xl font-bold">{detailBlog.data?.title}</h1>
         <div className="mb-8 text-sm text-gray-500">
@@ -74,18 +74,20 @@ const DtailPage = () => {
             defaultValue={detailBlog.data?.description ?? ""}
             className="mb-4 w-full rounded-md border px-4 py-2"
             />
+        <div className="flex space-x-4 mt-4">
         <button
-          className="mt-4 rounded-md bg-red-500 px-4 py-2 text-white"
+          className="mt-4 rounded-md bg-orange-500 px-4 py-2 text-white hover:bg-orange-600 transition"
           onClick={handleEdit}
         >
           Edit
         </button>
         <button
-          className="mt-4 rounded-md bg-red-500 px-4 py-2 text-white"
+          className="mt-4 rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600 transition"
           onClick={handleDelete}
         >
           Delete
         </button>
+        </div>
       </div>
     </main>
   );
