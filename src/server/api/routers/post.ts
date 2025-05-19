@@ -11,31 +11,31 @@ export const postRouter = createTRPCRouter({
       };
     }),
 
-  getAllBlogs:publicProcedure.query(()=>{
+  getAllTexts:publicProcedure.query(()=>{
     return db.post.findMany();
   }),
 
-  postBlogs:publicProcedure.input(
+  postTexts:publicProcedure.input(
     z.object({title: z.string(), description: z.string()}),
   ).mutation((req)=>{
-    const postBlog = db.post.create({
+    const postText = db.post.create({
       data: {
         title: req.input.title,
         description:req.input.description,
       },
     });
-    return postBlog
+    return postText
   }),
 
-  getDetailBlog:publicProcedure.input(z.object({id: z.number()})).query((req)=>{
+  getDetailText:publicProcedure.input(z.object({id: z.number()})).query((req)=>{
     return db.post.findUnique({where:{id:req.input.id}});
   }),
 
-  deleteBlog:publicProcedure.input(z.object({id: z.number()})).mutation((req)=>{
+  deleteText:publicProcedure.input(z.object({id: z.number()})).mutation((req)=>{
     return db.post.delete({where:{id:req.input.id}});
   }),
 
-  editBlog: publicProcedure
+  editText: publicProcedure
   .input(z.object({
     id: z.number(),
     title: z.string().min(1),

@@ -1,22 +1,25 @@
+//新規作成ページ
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 import React, { useRef } from 'react'
 import { api } from '~/utils/api';
 
-function PostBlog() {
+function PostText() {
     const titleRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
     const route = useRouter();
 
-    const allBlogs= api.post.getAllBlogs.useQuery();
-    const postBlog = api.post.postBlogs.useMutation({
+    //投稿関数
+    const allTexts= api.post.getAllTexts.useQuery();//refetchするために呼ぶ
+    const postText = api.post.postTexts.useMutation({
         onSettled:()=>{
-            allBlogs.refetch();
+            allTexts.refetch();
         },
     }
     );
 
+    //新規作成
     const handleSubmit = (e:React.FormEvent) => {
         e.preventDefault();
 
@@ -24,7 +27,7 @@ function PostBlog() {
         console.log(descriptionRef.current?.value)
 
         if(titleRef.current && descriptionRef.current){
-            postBlog.mutate({
+            postText.mutate({
             title:titleRef.current.value,
             description:descriptionRef.current.value,
         })
@@ -36,7 +39,7 @@ function PostBlog() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
         <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          <span className="text-[hsl(280,100%,70%)]">T3</span> App Blog
+          <span className="text-[hsl(280,100%,70%)]">T3</span> App Text
         </h1>
 
         <form
@@ -92,4 +95,4 @@ function PostBlog() {
   )
 }
 
-export default PostBlog
+export default PostText

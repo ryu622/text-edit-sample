@@ -1,3 +1,4 @@
+//インデックスページ
 import Head from "next/head";
 import Link from "next/link";
 import { api } from "~/utils/api";
@@ -7,13 +8,17 @@ export default function Home() {
   //const hello = api.post.hello.useQuery({ text: "from tRPC" });
   //console.log(hello.data);
 
-  const allBlogs = api.post.getAllBlogs.useQuery();
-  console.log(allBlogs.data);
+  //全件取得
+  const allTexts = api.post.getAllTexts.useQuery();
+  console.log(allTexts.data);
 
-  const postBlog = api.post.postBlogs.useMutation({
+  //テキストを投稿
+  const postText = api.post.postTexts.useMutation({
   onSettled: () => {
-    allBlogs.refetch(); // これで一覧の再取得（リロード）をする
+    allTexts.refetch(); // これで一覧の再取得（リロード）をする
   },});
+
+  //zipファイルのインポート
   const handleZipUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -24,7 +29,7 @@ export default function Home() {
         if (!zipEntry.name.endsWith(".txt")) continue;
 
         const content = await zipEntry.async("string");
-      await postBlog.mutateAsync({
+      await postText.mutateAsync({
         title: zipEntry.name.replace(".txt", ""),
         description: content,
       });
@@ -49,20 +54,20 @@ export default function Home() {
           </h1>
 
           <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {allBlogs.data?.map((blog)=>
+            {allTexts.data?.map((text)=>
             
-            <Link href= {`/blog/${blog.id}`} key={blog.id}>
+            <Link href= {`/text/${text.id}`} key={text.id}>
               <div className="rounded-xl bg-white/10 p-6">
-                <h3 className="mb-4 text-2xl font-bold">{blog.title}</h3>
-                <div className="mb4 text-lg">{blog.description}</div>
-                <span className="text-base text-gray-400">{blog.createdAt.toLocaleDateString()}</span>
+                <h3 className="mb-4 text-2xl font-bold">{text.title}</h3>
+                <div className="mb4 text-lg">{text.description}</div>
+                <span className="text-base text-gray-400">{text.createdAt.toLocaleDateString()}</span>
               </div>
             </Link>
             )}
             
           </div>
           <div className="mt-12 text-center">
-            <Link href="/postBlog" className="rounded-md bg-orange-500 px-6 py-2 font-midium" >投稿する</Link>
+            <Link href="/postText" className="rounded-md bg-orange-500 px-6 py-2 font-midium" >投稿する</Link>
           </div>
           <label
             htmlFor="zipUpload"
